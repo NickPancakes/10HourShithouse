@@ -4,7 +4,7 @@
     <link href="js/video-js/video-js.css" rel="stylesheet" />
   </head>
   <body>
-    <video id="vid" src="" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%"></video>
+    <video id="vid" src="" class="video-js vjs-default-skin" controls autoplay="autoplay" preload="auto" width="640" height="480"></video>
     <script src="js/video-js/video.js"></script>
     <script src="js/video-js/vjs.youtube.js"></script>
     <script>
@@ -22,22 +22,24 @@
           httpRequest.send();
       }
 
-
       function shuffle(o){ //v1.0
           for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
           return o;
       };
-      videojs('vid', { "techOrder": ["youtube"] }).ready(function() {
-        var self = this;
-        fetchJSONFile('videos.json', function(data){
-            var keyArray = Object.keys(data);
-            keyArray = shuffle(keyArray);
-            for (var i = 0; i < 10; ++i) {
-              var current = data[keyArray[i]];
-              self.src('http://www.youtube.com/watch?v=' + current.id);
-              console.log(keyArray[i])
-              console.log(current)
-            }
+
+      fetchJSONFile('videos.json', function(data){
+        var keyArray = Object.keys(data);
+        keyArray = shuffle(keyArray);
+        var i = 0;
+        var current = data[keyArray[i]];
+        initalVid = 'http://www.youtube.com/watch?v=' + current.id
+        videojs('vid', { "techOrder": ["youtube"], "src": initalVid  }).ready(function() {
+          this.play();
+          this.one('ended', function() {
+            i++;
+            current = data[keyArray[i]];
+            self.src('http://www.youtube.com/watch?v=' + current.id);
+          });
         });
       });
     </script>
