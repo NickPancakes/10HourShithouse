@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="js/video-js/video-js.css" rel="stylesheet" />
+  </head>
+  <body>
+    <video id="vid" src="" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%"></video>
+    <script src="js/video-js/video.js"></script>
+    <script src="js/video-js/vjs.youtube.js"></script>
+    <script>
+      function fetchJSONFile(path, callback) {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function() {
+          if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+              var data = JSON.parse(httpRequest.responseText);
+                if (callback) callback(data);
+              }
+            }
+          };
+          httpRequest.open('GET', path);
+          httpRequest.send();
+      }
+
+
+      function shuffle(o){ //v1.0
+          for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+          return o;
+      };
+      videojs('vid', { "techOrder": ["youtube"] }).ready(function() {
+        var self = this;
+        fetchJSONFile('videos.json', function(data){
+            var keyArray = Object.keys(data);
+            keyArray = shuffle(keyArray);
+            for (var i = 0; i < 10; ++i) {
+              var current = data[keyArray[i]];
+              self.src('http://www.youtube.com/watch?v=' + current.id);
+              console.log(keyArray[i])
+              console.log(current)
+            }
+        });
+      });
+    </script>
+  </body>
+</html>
