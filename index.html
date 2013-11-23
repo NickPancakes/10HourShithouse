@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Shithouse</title>
   </head>
-  <body>
+  <body style="margin: 0; overflow: hidden;">
     <div id="ytplayer"></div>
     <script>
       // Load the IFrame Player API code asynchronously.
@@ -29,23 +30,29 @@
           return o;
       };
 
-      fetchJSONFile('videos.json', function(data){
-        var keyArray = Object.keys(data);
-        keyArray = shuffle(keyArray);
-        var i = 0;
-        var current = data[keyArray[i]];
+      var player;
+      function onYouTubeIframeAPIReady() {
+        fetchJSONFile('videos.json', function(data){
+          var keyArray = Object.keys(data);
+          keyArray = shuffle(keyArray);
+          var i = 0;
+          var current = data[keyArray[i]];
+          window.document.title = "Shithouse - " + keyArray[i];
 
-        // Replace the 'ytplayer' element with an <iframe> and
-        // YouTube player after the API code downloads.
-        var player;
-        function onYouTubeIframeAPIReady() {
           player = new YT.Player('ytplayer', {
-            height: '480',
-            width: '640',
-            videoId: current.id
+            height: window.innerHeight,
+            width: window.innerWidth,
+            videoId: current.id,
+            events: {
+              'onReady': onPlayerReady,
+            }
           });
-        }
-      });
+        });
+      }
+      function onPlayerReady(event) {
+        event.target.setVolume(100);
+        event.target.playVideo();
+      }
     </script>
   </body>
 </html>
