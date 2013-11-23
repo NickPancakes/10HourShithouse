@@ -1,3 +1,3 @@
 #!/bin/bash -e
 
-rsync -Pavz index.html js/ shithouse.tv:/var/www/shithouse/10Hours/
+rsync -Pavz videos.json index.html js shithouse.tv:/var/www/shithouse/10Hours/
