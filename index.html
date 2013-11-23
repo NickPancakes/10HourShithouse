@@ -31,11 +31,14 @@
       };
 
       var player;
+      var keyArray;
+      var globData;
+      var i = 0;
       function onYouTubeIframeAPIReady() {
         fetchJSONFile('videos.json', function(data){
-          var keyArray = Object.keys(data);
+          globData = data
+          keyArray = Object.keys(data);
           keyArray = shuffle(keyArray);
-          var i = 0;
           var current = data[keyArray[i]];
           window.document.title = "Shithouse - " + keyArray[i];
 
@@ -45,6 +48,7 @@
             videoId: current.id,
             events: {
               'onReady': onPlayerReady,
+              'onStateChange': onPlayerStateChange,
             }
           });
         });
@@ -52,6 +56,16 @@
       function onPlayerReady(event) {
         event.target.setVolume(100);
         event.target.playVideo();
+      }
+      function onPlayerStateChange(event) {
+        if (event.data === 0) {
+          i++;
+          window.document.title = "Shithouse - " + keyArray[i];
+          var current = globData[keyArray[i]];
+          event.target.loadVideoById(current.id);
+          event.target.setVolume(100);
+          event.target.playVideo();
+        }
       }
     </script>
   </body>
