@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link href="js/video-js/video-js.css" rel="stylesheet" />
   </head>
   <body>
-    <video id="vid" src="" class="video-js vjs-default-skin" controls autoplay="autoplay" preload="auto" width="640" height="480"></video>
-    <script src="js/video-js/video.js"></script>
-    <script src="js/video-js/vjs.youtube.js"></script>
+    <div id="ytplayer"></div>
     <script>
+      // Load the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/player_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       function fetchJSONFile(path, callback) {
         var httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = function() {
@@ -32,15 +34,17 @@
         keyArray = shuffle(keyArray);
         var i = 0;
         var current = data[keyArray[i]];
-        initalVid = 'http://www.youtube.com/watch?v=' + current.id
-        videojs('vid', { "techOrder": ["youtube"], "src": initalVid  }).ready(function() {
-          this.play();
-          this.one('ended', function() {
-            i++;
-            current = data[keyArray[i]];
-            self.src('http://www.youtube.com/watch?v=' + current.id);
+
+        // Replace the 'ytplayer' element with an <iframe> and
+        // YouTube player after the API code downloads.
+        var player;
+        function onYouTubeIframeAPIReady() {
+          player = new YT.Player('ytplayer', {
+            height: '480',
+            width: '640',
+            videoId: current.id
           });
-        });
+        }
       });
     </script>
   </body>
