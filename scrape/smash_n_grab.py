@@ -1,14 +1,19 @@
 from bs4 import BeautifulSoup
-from json import dumps
+from json import dumps, loads, load
 from time import sleep
 import requests
 
-output = 'raw_scraped.json'
+existing = 'videos.json'
 
 def main():
-    output_file = open(output, 'w')
-    intermediate_output_file = open('intermediate_{}'.format(output), 'a')
-    urls = {}
+    loaded = open(existing, 'r')
+    urls = load(loaded) or {}
+    print "Loaded {} existing videos.".format(len(urls.keys()))
+    loaded.close()
+
+    output_file = open(existing, 'w')
+    intermediate_output_file = open('intermediate_{}'.format(existing), 'a')
+
     for i in range(1,60):
         print "Grabbing page {}.".format(i)
         r = requests.get('http://www.youtube.com/results?search_query="10+hours"&page={}'.format(i))
