@@ -8,11 +8,12 @@ existing = 'videos.json'
 def main():
     loaded = open(existing, 'r')
     urls = load(loaded) or {}
+    old_len = len(urls.keys())
     print "Loaded {} existing videos.".format(len(urls.keys()))
     loaded.close()
 
     output_file = open(existing, 'w')
-    intermediate_output_file = open('intermediate_{}'.format(existing), 'a')
+    intermediate_output_file = open('/tmp/intermediate_{}'.format(existing), 'a')
 
     for i in range(1,60):
         print "Grabbing page {}.".format(i)
@@ -48,6 +49,8 @@ def main():
     output_file.write(dumps(urls))
     intermediate_output_file.close()
     output_file.close()
+    diff = len(urls.keys()) - old_len
+    print "Added {} new videos.".format(diff)
 
 if __name__ == '__main__':
     main()
