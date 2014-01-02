@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from json import dumps, loads, load
 from time import sleep
-import requests
+import requests, os
 
 existing = 'videos.json'
 
@@ -48,6 +48,7 @@ def main():
 
     output_file.write(dumps(urls))
     intermediate_output_file.close()
+    os.remove(intermediate_output_file)
     output_file.close()
     diff = len(urls.keys()) - old_len
     print "Added {} new videos.".format(diff)
