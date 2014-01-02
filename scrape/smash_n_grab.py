@@ -13,7 +13,7 @@ def main():
     loaded.close()
 
     output_file = open(existing, 'w')
-    intermediate_output_file = open('/tmp/intermediate_{}'.format(existing), 'a')
+    intermediate_output_file = open('/tmp/intermediate_{}'.format(existing), 'w')
 
     for i in range(1,60):
         print "Grabbing page {}.".format(i)
